@@ -12,6 +12,7 @@ props to the people
 who wrote jszip...
 
 >   http://stuartk.com/jszip
+
 >   https://github.com/Stuk/jszip
 
 
