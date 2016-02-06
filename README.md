@@ -8,6 +8,14 @@ that they don't know
 what they're talking about.
 
 
+props to the people
+who wrote jszip...
+
+>   http://stuartk.com/jszip
+>   https://github.com/Stuk/jszip
+
+
+
 ````
 <!doctype html><html><head><meta charset="utf-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
