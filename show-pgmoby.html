@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta name=viewport content="width=device-width, user-scalable=no, user-scalable=0, initial-scale=1, minimum-scale=1, maximum-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>display pgmoby.epub</title>
+<script type="text/javascript" src="http://stuk.github.io/jszip/dist/jszip.js"></script>
+<script type="text/javascript" src="http://stuk.github.io/jszip-utils/dist/jszip-utils.js"></script>
+<!-- mandatory in the scumbags, ie 6, 7, 8 and 9. -->
+<!--[if IE]>
+<script type="text/javascript" src="http://stuk.github.io/jszip-utils/dist/jszip-utils-ie.js"></script>
+<![endif]-->
+<script type="text/javascript" src="http://stuk.github.io/jszip/test/jquery-1.8.3.min.js"></script>
+</head>
+<body style=padding-left:30px;background-color:orange;overflow-x:hidden;overflow-y:scroll>
+<h1>display pgmoby.epub</h1>
+<div id="theoutput" style=background-color:honeydew;padding-left:30px;overflow-x:hidden;overflow-y:scroll></div>
+<! ------------------------------- scripts start here -------------------------------- -->
+<script>
+var d=new Date();var n=d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+"..."+d.getMilliseconds();document.title=n
+JSZipUtils.getBinaryContent('http://zenmagiclove.com/simple/pgmoby.epub', function(err, data) {
+try {
+var zip=new JSZip(data)
+var css=zip.file("OEBPS/pgepub.css").asText();css="style>\n"+css+"\n</style>\n\n\n\n"
+var opf=zip.file("OEBPS/content.opf").asText();opf=opf.replace(/</g,"&lt;")
+var ncx=zip.file("OEBPS/toc.ncx").asText();ncx=ncx.replace(/</g,"&lt;")
+var opfncx="<hr><hr><hr><hr>"+"<h2>opf:</h2><pre>\n"+opf+"</pre>"+"\n<hr><hr><hr><hr>"
+opfncx=opfncx+"<h2>ncx:</h2><pre>\n"+ncx+"</pre>"+"<hr><hr><hr><hr>"
+var gourdnames=ncx.split('content src=')
+gourdnames[0]=""
+for (var gg=1; gg<=gourdnames.length-1; gg++)
+{
+gourdnames[gg]=gourdnames[gg].replace(/"/g," ")
+gourdnames[gg]=gourdnames[gg].trim()
+gourdnames[gg]=gourdnames[gg]+' '
+gourdnames[gg]=gourdnames[gg].substring(0,gourdnames[gg].indexOf(' '))
+if (gourdnames[gg].indexOf("#")  > -1){gourdnames[gg]=gourdnames[gg].substring(0,gourdnames[gg].indexOf('#'))}
+opfncx=opfncx+gg+" -- "+gourdnames[gg]+"<br>"
+}
+var showit=""
+for (var gg=1; gg<=gourdnames.length-2; gg++)
+{
+if (gourdnames[gg] == gourdnames[gg+1]){gourdnames[gg]=""}
+}
+var thisgourdname=""
+for (var gg=1; gg<=gourdnames.length-1; gg++)
+{
+if (gourdnames[gg] != "")
+{
+thisgourdname="OEBPS/"+gourdnames[gg]
+var thisgourd=zip.file(thisgourdname).asText()
+showit=showit+"<h2><a id=gourd"+gg+"</a>&nbsp;</h2>\n"+thisgourd
+}
+}
+showit=showit.replace(/link href="pgepub.css" type="text\/css" rel="stylesheet"\/>/g,css)
+showit=showit.replace("<h2>","<p style=margin:0;padding:0>")
+showit=showit.replace("</h2>","</p>")
+// showit=showit+"<hr><hr><hr>"+opfncx // uncomment if you wanna see the opf and the ncx at the bottom
+$("#theoutput").html(showit)
+var d=new Date();var n=d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+"..."+d.getMilliseconds();document.title=document.title+" -- "+n
+} catch(e) {$("#theoutput").html("<h1>oops, there was an error -- "+e+"</h1>")}
+})
+</script>
+</body>
+</html>
